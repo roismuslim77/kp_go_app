@@ -7,6 +7,7 @@ import (
 	"gorm.io/gorm"
 	"inventory-simple-go/application/domain/category"
 	"inventory-simple-go/application/domain/healthcheck"
+	"inventory-simple-go/application/domain/items"
 	"net/http"
 )
 
@@ -57,9 +58,11 @@ func (r *Router) Run() {
 
 	baseHealthCheck := r.router.Group("/health-check")
 	baseCategory := r.router.Group("/categories")
+	baseItem := r.router.Group("/items")
 
 	r.BuildHealthCheck(baseHealthCheck)
 	r.BuildCategories(baseCategory)
+	r.BuildItems(baseItem)
 
 	r.router.Run(fmt.Sprintf(":%s", r.port))
 }
@@ -72,6 +75,11 @@ func (r *Router) BuildHealthCheck(router *gin.RouterGroup) {
 func (r *Router) BuildCategories(router *gin.RouterGroup) {
 	c := category.NewRouterHttp(router, r.db, r.middleware)
 	c.RegisterRoute()
+}
+
+func (r *Router) BuildItems(router *gin.RouterGroup) {
+	item := items.NewRouterHttp(router, r.db, r.middleware)
+	item.RegisterRoute()
 }
 
 func (r *Router) SetMiddleware(db *gorm.DB) *Router {

@@ -11,7 +11,7 @@ import (
 )
 
 type Service interface {
-	GetAllCategory(ctx context.Context) ([]entity.Category, response.ErrorResponse)
+	GetAllCategory(ctx context.Context, filter FilterListing) ([]entity.Category, PaginateListing, response.ErrorResponse)
 	CreateCategory(ctx context.Context, name string) response.ErrorResponse
 }
 
@@ -50,13 +50,20 @@ func (h handler) CreateCategory(ctx *gin.Context) {
 }
 
 func (h handler) GetAllCategory(ctx *gin.Context) {
-	cards, err := h.service.GetAllCategory(ctx)
+	var req FilterListing
+	req.Page = ctx.Query("page")
+	req.Size = ctx.Query("size")
+
+	cards, paginate, err := h.service.GetAllCategory(ctx, req)
 	if !err.IsNoError {
 		resp := response.Error(err.Code).WithError(err.Message).WithStatusCode(err.StatusCode)
 		ctx.AbortWithStatusJSON(resp.StatusCode, resp)
 		return
 	}
 
-	resp := response.Success("22152").WithData(cards)
+	resp := response.Success("22152").WithData(cards).
+		WithTotalPage(int(paginate.TotalPage)).
+		WithCount(int(paginate.TotalData))
+	
 	ctx.JSON(resp.StatusCode, resp)
 }

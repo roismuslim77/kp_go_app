@@ -4,7 +4,7 @@ import (
 	"fmt"
 	"github.com/gin-gonic/gin"
 	"gorm.io/gorm"
-	"inventory-simple-go/pkg/response"
+	"simple-go/pkg/response"
 )
 
 type handler struct {

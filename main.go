@@ -1,9 +1,9 @@
 package main
 
 import (
-	"inventory-simple-go/application/config"
-	"inventory-simple-go/application/database"
-	"inventory-simple-go/application/infra"
+	"simple-go/application/config"
+	"simple-go/application/database"
+	"simple-go/application/infra"
 	"time"
 )
 

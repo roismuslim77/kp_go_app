@@ -5,10 +5,10 @@ import (
 	"github.com/gin-contrib/gzip"
 	"github.com/gin-gonic/gin"
 	"gorm.io/gorm"
-	"inventory-simple-go/application/domain/category"
-	"inventory-simple-go/application/domain/healthcheck"
-	"inventory-simple-go/application/domain/items"
 	"net/http"
+	"simple-go/application/domain/auth"
+	"simple-go/application/domain/healthcheck"
+	"simple-go/application/domain/transaction"
 )
 
 type Router struct {
@@ -57,12 +57,12 @@ func (r *Router) Run() {
 	fmt.Println("server running at port", r.port)
 
 	baseHealthCheck := r.router.Group("/health-check")
-	baseCategory := r.router.Group("/categories")
-	baseItem := r.router.Group("/items")
+	baseAuth := r.router.Group("/auth")
+	baseTransaction := r.router.Group("/transaction")
 
 	r.BuildHealthCheck(baseHealthCheck)
-	r.BuildCategories(baseCategory)
-	r.BuildItems(baseItem)
+	r.BuildAuth(baseAuth)
+	r.BuildTransaction(baseTransaction)
 
 	r.router.Run(fmt.Sprintf(":%s", r.port))
 }
@@ -71,15 +71,13 @@ func (r *Router) BuildHealthCheck(router *gin.RouterGroup) {
 	hc := healthcheck.NewRouterHttp(router, r.db)
 	hc.RegisterRoute()
 }
-
-func (r *Router) BuildCategories(router *gin.RouterGroup) {
-	c := category.NewRouterHttp(router, r.db, r.middleware)
-	c.RegisterRoute()
+func (r *Router) BuildAuth(router *gin.RouterGroup) {
+	auth := auth.NewRouterHttp(router, r.db, r.middleware)
+	auth.RegisterRoute()
 }
-
-func (r *Router) BuildItems(router *gin.RouterGroup) {
-	item := items.NewRouterHttp(router, r.db, r.middleware)
-	item.RegisterRoute()
+func (r *Router) BuildTransaction(router *gin.RouterGroup) {
+	trx := transaction.NewRouterHttp(router, r.db, r.middleware)
+	trx.RegisterRoute()
 }
 
 func (r *Router) SetMiddleware(db *gorm.DB) *Router {

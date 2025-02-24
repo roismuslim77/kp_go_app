@@ -3,7 +3,7 @@ package healthcheck
 import (
 	"github.com/gin-gonic/gin"
 	"gorm.io/gorm"
-	"inventory-simple-go/application/domain"
+	"simple-go/application/domain"
 )
 
 type RouterHttp struct {

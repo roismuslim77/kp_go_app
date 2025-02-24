@@ -2,7 +2,7 @@ package infra
 
 import (
 	"gorm.io/gorm"
-	infrahttp "inventory-simple-go/application/infra/http"
+	infrahttp "simple-go/application/infra/http"
 )
 
 type Infra interface {
